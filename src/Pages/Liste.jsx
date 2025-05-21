@@ -12,6 +12,8 @@ import {
   Chip,
   IconButton,
   Tooltip,
+  Pagination,
+  Stack,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -35,25 +37,31 @@ const sampleData = [
   }
 ];
 
-
-
 function Liste() {
+  const [data, setData] = useState({
+    participants: [],
+    currentPage: 1,
+    totalPages: 1,
+    totalItems: 0,
+    itemsPerPage: 8
+  });
 
-const [sampleData, setSampleData] = useState([]);
-
-
-  const handleShow = async () => {
+  const handleShow = async (page = 1) => {
     try {
-        const response = await axios.get('http://localhost:3000/api/participants');
-        setSampleData(response.data);
+      const response = await axios.get(`http://localhost:3000/api/participants?page=${page}&limit=${data.itemsPerPage}`);
+      setData(response.data);
     } catch (error) {
-        console.log(error);
-}
-}
+      console.log(error);
+    }
+  }
 
-useEffect(() => {
-  handleShow();
-}, []);
+  useEffect(() => {
+    handleShow();
+  }, []);
+
+  const handlePageChange = (event, newPage) => {
+    handleShow(newPage);
+  };
 
   return (
     <Box sx={{ p: 3 }}>
@@ -77,7 +85,7 @@ useEffect(() => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {sampleData.map((user) => (
+            {data.participants.map((user) => (
               <TableRow
                 key={user._id}
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -113,6 +121,22 @@ useEffect(() => {
           </TableBody>
         </Table>
       </TableContainer>
+
+      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
+        <Stack spacing={2}>
+          <Pagination 
+            count={data.totalPages} 
+            page={data.currentPage}
+            onChange={handlePageChange}
+            color="primary"
+            showFirstButton 
+            showLastButton
+          />
+          <Typography variant="body2" color="text.secondary" align="center">
+            Affichage de {data.participants.length} sur {data.totalItems} entrées
+          </Typography>
+        </Stack>
+      </Box>
     </Box>
   );
 }
