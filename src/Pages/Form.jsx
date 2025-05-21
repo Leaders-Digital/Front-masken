@@ -1,5 +1,5 @@
-import React, { useState } from 'react'; 
-import axios from 'axios'; 
+import React, { useState } from 'react';
+import axios from 'axios';
 import { Box, Grid, Typography, TextField, Button, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import EmailIcon from '@mui/icons-material/Email';
@@ -7,20 +7,9 @@ import PersonIcon from '@mui/icons-material/Person';
 import PhoneIcon from '@mui/icons-material/Phone';
 import HomeWorkIcon from '@mui/icons-material/HomeWork';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import { toast, Toaster } from 'sonner';
 
-const professions = [
-  'Coiffeur',
-  'Esthéticien',
-  'Barbier',
-  'Autre',
-];
-const activities = [
-  'Salon',
-  'Institut',
-  'Spa',
-  'Autre',
-];
 
 const statusOptions = [
   'Propriétaire',
@@ -72,16 +61,20 @@ function Form() {
         budget: '',
       });
       toast.success('Inscription réussie !');
-    } catch (err) {
-      toast.error(err.response?.data?.message || err.message || 'Erreur lors de l\'envoi');
-    } finally {
+    }catch (err) {
+      if (err.response?.data?.message?.includes('E11000 duplicate key error')) {
+        toast.error('Cet email est déjà inscrit. Veuillez en utiliser un autre.');
+      } else {
+        toast.error(err.response?.data?.message || err.message || 'Une erreur est survenue. Veuillez réessayer.');
+      }
+    }
+    finally {
       setLoading(false);
     }
   };
-
   return (
     <Grid container sx={{ minHeight: '100vh', width: '100vw' }}>
-        <Toaster richColors  />
+      <Toaster richColors />
       {/* Left Side - Image and Event Info */}
       <Grid item xs={12} md={6} sx={{
         width: { xs: '100%', md: '50vw' },
@@ -137,7 +130,7 @@ function Form() {
               fullWidth
               placeholder="Entrez votre prénom"
               InputProps={{ startAdornment: <PersonIcon sx={{ color: '#059ad7', mr: 1 }} /> }}
-              sx={{ bgcolor: '#f8fafc', borderRadius: 2 }}
+              sx={{ borderRadius: 2 }}
             />
             <TextField
               label="Nom"
@@ -148,7 +141,7 @@ function Form() {
               fullWidth
               placeholder="Entrez votre nom"
               InputProps={{ startAdornment: <PersonIcon sx={{ color: '#059ad7', mr: 1 }} /> }}
-              sx={{ bgcolor: '#f8fafc', borderRadius: 2 }}
+              sx={{ borderRadius: 2 }}
             />
             <TextField
               label="Votre email"
@@ -160,7 +153,7 @@ function Form() {
               fullWidth
               placeholder="exemple@email.com"
               InputProps={{ startAdornment: <EmailIcon sx={{ color: '#059ad7', mr: 1 }} /> }}
-              sx={{ bgcolor: '#f8fafc', borderRadius: 2 }}
+              sx={{ borderRadius: 2 }}
             />
             <TextField
               label="Votre téléphone"
@@ -171,7 +164,7 @@ function Form() {
               fullWidth
               placeholder="06 12 34 56 78"
               InputProps={{ startAdornment: <PhoneIcon sx={{ color: '#059ad7', mr: 1 }} /> }}
-              sx={{ bgcolor: '#f8fafc', borderRadius: 2 }}
+              sx={{ borderRadius: 2 }}
             />
             <TextField
               label="Adresse postale"
@@ -182,27 +175,28 @@ function Form() {
               fullWidth
               placeholder="123 rue de l'exemple, 75000 Paris"
               InputProps={{ startAdornment: <LocationOnIcon sx={{ color: '#059ad7', mr: 1 }} /> }}
-              sx={{ bgcolor: '#f8fafc', borderRadius: 2 }}
+              sx={{ borderRadius: 2 }}
             />
-           <FormControl fullWidth variant="outlined" sx={{ bgcolor: '#f8fafc', borderRadius: 2 }}>
-  <InputLabel shrink sx={{ color: '#059ad7' }}>
-    Status actuel
-  </InputLabel>
-  <Select
-    label="Status actuel"
-    name="statusActuel"
-    value={form.statusActuel}
-    onChange={handleChange}
-    displayEmpty
-  >
-    <MenuItem value="" disabled>
-      <em>Sélectionnez votre statut actuel</em>
-    </MenuItem>
-    {statusOptions.map((option) => (
-      <MenuItem key={option} value={option}>{option}</MenuItem>
-    ))}
-  </Select>
-</FormControl>
+            <FormControl fullWidth variant="outlined" sx={{ borderRadius: 2 }}>
+              <InputLabel shrink sx={{ color: '#059ad7' }}>
+                Status actuel
+              </InputLabel>
+              <Select
+                label="Status actuel"
+                name="statusActuel"
+                value={form.statusActuel}
+                onChange={handleChange}
+                displayEmpty
+                startAdornment={<AccountBoxIcon sx={{ color: '#059ad7', mr: 1 }} />}
+              >
+                <MenuItem value="" disabled>
+                  <em>Sélectionnez votre statut actuel</em>
+                </MenuItem>
+                {statusOptions.map((option) => (
+                  <MenuItem key={option} value={option}>{option}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
 
             {form.statusActuel === 'Autre' && (
               <TextField
@@ -213,10 +207,10 @@ function Form() {
                 variant="outlined"
                 fullWidth
                 placeholder="Précisez votre statut actuel"
-                sx={{ bgcolor: '#f8fafc', borderRadius: 2 }}
+                sx={{ borderRadius: 2 }}
               />
             )}
-            <FormControl fullWidth variant="outlined" sx={{ bgcolor: '#f8fafc', borderRadius: 2 }}>
+            <FormControl fullWidth variant="outlined" sx={{ borderRadius: 2 }}>
               <InputLabel sx={{ color: '#059ad7' }}>Type de bien recherché</InputLabel>
               <Select
                 label="Type de bien recherché"
@@ -243,9 +237,9 @@ function Form() {
               fullWidth
               placeholder="Ex: 250 000 TND"
               InputProps={{ startAdornment: <MonetizationOnIcon sx={{ color: '#059ad7', mr: 1 }} /> }}
-              sx={{ bgcolor: '#f8fafc', borderRadius: 2 }}
+              sx={{ borderRadius: 2 }}
             />
-            <Button type="submit" variant="contained" size="large" sx={{boxShadow: "none", bgcolor: '#059ad7', mt: 2, borderRadius: 2, fontWeight: 600, fontSize: 18, py: 1.5, '&:hover': { bgcolor: '#047bb0' } }} disabled={loading}>
+            <Button type="submit" variant="contained" size="large" sx={{ boxShadow: "none", bgcolor: '#059ad7', mt: 2, borderRadius: 2, fontWeight: 600, fontSize: 18, py: 1.5, '&:hover': { bgcolor: '#047bb0' } }} disabled={loading}>
               {loading ? 'Envoi...' : 'Envoyer'}
             </Button>
           </Box>

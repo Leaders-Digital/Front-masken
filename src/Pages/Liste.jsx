@@ -43,7 +43,34 @@ function Liste() {
     currentPage: 1,
     totalPages: 1,
     totalItems: 0,
-    itemsPerPage: 8
+    itemsPerPage: 12
+  });
+
+  const getStatusStyle = (statut) => ({
+    backgroundColor:
+      statut === "Propriétaire"
+        ? "#16A34A33"
+        : statut === "Locataire"
+        ? "#EAB30833"
+        : statut === "Acheteur"
+        ? "#EB322333"
+        : statut === "Locataire potentiel"
+        ? "#33BFFF33"
+        : statut === "Autre"
+        ? "#16A34A33"
+        : "transparent",
+    color:
+      statut === "Propriétaire"
+        ? "#16A34A"
+        : statut === "Locataire"
+        ? "#EAB308"
+        : statut === "Acheteur"
+        ? "#EB3223"
+        : statut === "Locataire potentiel"
+        ? "#33BFFF"
+        : statut === "Autre"
+        ? "#16A34A"
+        : "inherit",
   });
 
   const handleShow = async (page = 1) => {
@@ -62,14 +89,13 @@ function Liste() {
   const handlePageChange = (event, newPage) => {
     handleShow(newPage);
   };
-
   return (
     <Box sx={{ p: 3 }}>
-      <Typography variant="h4" gutterBottom sx={{ mb: 3 }}>
+      <Typography variant="h4" gutterBottom sx={{ mb: 3,color: 'primary.main' }}>
         Liste des Utilisateurs
       </Typography>
       
-      <TableContainer component={Paper} sx={{ boxShadow: 3 }}>
+      <TableContainer component={Paper} sx={{ boxShadow: 0, border: '1px solid #e0e0e0' }}>
         <Table sx={{ minWidth: 650 }} aria-label="user table">
           <TableHead>
             <TableRow sx={{ backgroundColor: 'primary.main' }}>
@@ -81,7 +107,6 @@ function Liste() {
               <TableCell sx={{ color: 'white' }}>Type de Bien</TableCell>
               <TableCell sx={{ color: 'white' }}>Budget</TableCell>
               <TableCell sx={{ color: 'white' }}>Date de création</TableCell>
-              <TableCell sx={{ color: 'white' }}>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -97,25 +122,14 @@ function Liste() {
                 <TableCell>
                   <Chip
                     label={user.statusActuel}
-                    color={user.statusActuel === "Locataire" ? "success" : "primary"}
+                    sx={getStatusStyle(user.statusActuel)}
                     size="small"
                   />
                 </TableCell>
                 <TableCell>{user.typeDeBienRecherche}</TableCell>
                 <TableCell>{user.budget}</TableCell>
                 <TableCell>{user.createdAt.split('T')[0]}</TableCell>
-                <TableCell>
-                  <Tooltip title="Modifier">
-                    <IconButton size="small" color="primary">
-                      <EditIcon />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title="Supprimer">
-                    <IconButton size="small" color="error">
-                      <DeleteIcon />
-                    </IconButton>
-                  </Tooltip>
-                </TableCell>
+           
               </TableRow>
             ))}
           </TableBody>
