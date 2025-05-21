@@ -1,43 +1,115 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Box, Grid, Typography, TextField, Button, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
+import { 
+  Box, 
+  Grid, 
+  Typography, 
+  TextField, 
+  Button, 
+  MenuItem, 
+  Select, 
+  InputLabel, 
+  FormControl, 
+  FormControlLabel, 
+  Radio, 
+  RadioGroup, 
+  FormLabel,
+  Tabs,
+  Tab,
+  Paper
+} from '@mui/material';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import EmailIcon from '@mui/icons-material/Email';
 import PersonIcon from '@mui/icons-material/Person';
 import PhoneIcon from '@mui/icons-material/Phone';
+import WorkIcon from '@mui/icons-material/Work';
 import HomeWorkIcon from '@mui/icons-material/HomeWork';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
-import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import { toast, Toaster } from 'sonner';
 
-
-const statusOptions = [
-  'Propriétaire',
-  'Locataire',
-  'Acheteur',
-  'Locataire potentiel',
-  'Autre',
-];
 const typeBienOptions = [
   'Appartement',
-  'Maison',
+  'Villa',
   'Terrain',
-  'Autre',
+  'Local commercial',
+  'Autre'
 ];
+
+const typeServiceOptions = [
+  'Achat d\'un bien',
+  'Construction clé en main',
+  'Étude de projet',
+  'Réaménagement / rénovation',
+  'Autre'
+];
+
+const budgetOptions = [
+  '< 150.000 TND',
+  '150.000 – 250.000 TND',
+  '250.000 – 400.000 TND',
+  '> 400.000 TND',
+  'À définir'
+];
+
+const financementOptions = [
+  'Comptant',
+  'Crédit bancaire',
+  'En cours de demande',
+  'Facilité de paiement'
+];
+
+const sourceConnaissanceOptions = [
+  'Réseaux sociaux',
+  'Recommandation',
+  'Publicité en ligne',
+  'Passage sur place',
+  'Autre'
+];
+
+function TabPanel({ children, value, index }) {
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`form-tabpanel-${index}`}
+      aria-labelledby={`form-tab-${index}`}
+    >
+      {value === index && (
+        <Box sx={{ py: 3, display: 'flex', flexDirection: 'column', gap: 3 }}>
+          {children}
+        </Box>
+      )}
+    </div>
+  );
+}
 
 function Form() {
   const [form, setForm] = useState({
     nom: '',
     prenom: '',
-    email: '',
     telephone: '',
-    AdressePostale: '',
-    statusActuel: '',
-    autre: '',
-    typeDeBienRecherche: '',
+    email: '',
+    profession: '',
+    villeResidence: '',
+    typeBienRecherche: '',
+    typeBienRechercheAutre: '',
+    typeServiceRecherche: '',
+    typeServiceRechercheAutre: '',
+    statutProjet: '',
+    delaiAchat: null,
+    localisationSouhaitee: '',
     budget: '',
+    budgetDefini: '',
+    financement: '',
+    sourceConnaissance: '',
+    sourceConnaissanceAutre: ''
   });
   const [loading, setLoading] = useState(false);
+  const [tabValue, setTabValue] = useState(0);
+
+  const handleTabChange = (event, newValue) => {
+    setTabValue(newValue);
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -48,34 +120,48 @@ function Form() {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await axios.post('http://localhost:3000/api/participants', form);
+      const formData = { ...form };
+      
+      if (formData.statutProjet !== 'Recherche active') {
+        formData.delaiAchat = null;
+      }
+
+      const response = await axios.post('http://localhost:3000/api/participants', formData);
       setForm({
         nom: '',
         prenom: '',
-        email: '',
         telephone: '',
-        AdressePostale: '',
-        statusActuel: '',
-        autre: '',
-        typeDeBienRecherche: '',
+        email: '',
+        profession: '',
+        villeResidence: '',
+        typeBienRecherche: '',
+        typeBienRechercheAutre: '',
+        typeServiceRecherche: '',
+        typeServiceRechercheAutre: '',
+        statutProjet: '',
+        delaiAchat: null,
+        localisationSouhaitee: '',
         budget: '',
+        budgetDefini: '',
+        financement: '',
+        sourceConnaissance: '',
+        sourceConnaissanceAutre: ''
       });
       toast.success('Inscription réussie !');
-    }catch (err) {
+    } catch (err) {
       if (err.response?.data?.message?.includes('E11000 duplicate key error')) {
         toast.error('Cet email est déjà inscrit. Veuillez en utiliser un autre.');
       } else {
         toast.error(err.response?.data?.message || err.message || 'Une erreur est survenue. Veuillez réessayer.');
       }
-    }
-    finally {
+    } finally {
       setLoading(false);
     }
   };
+
   return (
     <Grid container sx={{ minHeight: '100vh', width: '100vw' }}>
       <Toaster richColors />
-      {/* Left Side - Image and Event Info */}
       <Grid item xs={12} md={6} sx={{
         width: { xs: '100%', md: '50vw' },
         minHeight: '100vh',
@@ -90,24 +176,8 @@ function Form() {
         position: 'relative',
         p: 4,
       }}>
-        {/* <Box sx={{ textAlign: 'center', zIndex: 2 }}>
-          <img src="/images/house.png" alt="Wakeup Logo" style={{ width: 120, marginBottom: 32, filter: 'drop-shadow(0 0 10px #000)' }} />
-          <Typography variant="subtitle2" sx={{ letterSpacing: 2, mb: 2 }}>
-            NOUS SOMMES RAVIS DE VOUS INVITER À
-          </Typography>
-          <Typography variant="h5" sx={{ color: '#059ad7', mb: 1 }}>
-            L'événement
-          </Typography>
-          <Typography variant="h2" sx={{ color: '#059ad7', fontStyle: 'italic', mb: 2, fontWeight: 400 }}>
-            Wake Up
-          </Typography>
-
-       
-        </Box> */}
-        {/* Overlay for dark effect */}
       </Grid>
 
-      {/* Right Side - Form */}
       <Grid item xs={12} md={6} sx={{
         width: { xs: '100%', md: '50vw' },
         minHeight: '100vh',
@@ -115,133 +185,314 @@ function Form() {
         alignItems: 'center',
         justifyContent: 'center',
         bgcolor: 'white',
+        overflowY: 'auto',
       }}>
         <Box sx={{ width: '100%', p: { xs: 2, md: 6 }, maxWidth: 520, mx: 'auto', borderRadius: 4 }}>
-          <Typography variant="h5" sx={{ color: '#059ad7', mb: 3, textAlign: 'center', fontWeight: 600, letterSpacing: 1 }}>
-            Veuillez remplir vos informations
+          <Typography variant="h5" sx={{ color: '#059ad7', mb: 4, textAlign: 'center', fontWeight: 600, letterSpacing: 1 }}>
+            Formulaire d'inscription
           </Typography>
-          <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-            <TextField
-              label="Prénom"
-              name="prenom"
-              value={form.prenom}
-              onChange={handleChange}
-              variant="outlined"
-              fullWidth
-              placeholder="Entrez votre prénom"
-              InputProps={{ startAdornment: <PersonIcon sx={{ color: '#059ad7', mr: 1 }} /> }}
-              sx={{ borderRadius: 2 }}
-            />
-            <TextField
-              label="Nom"
-              name="nom"
-              value={form.nom}
-              onChange={handleChange}
-              variant="outlined"
-              fullWidth
-              placeholder="Entrez votre nom"
-              InputProps={{ startAdornment: <PersonIcon sx={{ color: '#059ad7', mr: 1 }} /> }}
-              sx={{ borderRadius: 2 }}
-            />
-            <TextField
-              label="Votre email"
-              type="email"
-              name="email"
-              value={form.email}
-              onChange={handleChange}
-              variant="outlined"
-              fullWidth
-              placeholder="exemple@email.com"
-              InputProps={{ startAdornment: <EmailIcon sx={{ color: '#059ad7', mr: 1 }} /> }}
-              sx={{ borderRadius: 2 }}
-            />
-            <TextField
-              label="Votre téléphone"
-              name="telephone"
-              value={form.telephone}
-              onChange={handleChange}
-              variant="outlined"
-              fullWidth
-              placeholder="06 12 34 56 78"
-              InputProps={{ startAdornment: <PhoneIcon sx={{ color: '#059ad7', mr: 1 }} /> }}
-              sx={{ borderRadius: 2 }}
-            />
-            <TextField
-              label="Adresse postale"
-              name="AdressePostale"
-              value={form.AdressePostale}
-              onChange={handleChange}
-              variant="outlined"
-              fullWidth
-              placeholder="123 rue de l'exemple, 75000 Paris"
-              InputProps={{ startAdornment: <LocationOnIcon sx={{ color: '#059ad7', mr: 1 }} /> }}
-              sx={{ borderRadius: 2 }}
-            />
-            <FormControl fullWidth variant="outlined" sx={{ borderRadius: 2 }}>
-              <InputLabel shrink sx={{ color: '#059ad7' }}>
-                Status actuel
-              </InputLabel>
-              <Select
-                label="Status actuel"
-                name="statusActuel"
-                value={form.statusActuel}
-                onChange={handleChange}
-                displayEmpty
-                startAdornment={<AccountBoxIcon sx={{ color: '#059ad7', mr: 1 }} />}
-              >
-                <MenuItem value="" disabled>
-                  <em>Sélectionnez votre statut actuel</em>
-                </MenuItem>
-                {statusOptions.map((option) => (
-                  <MenuItem key={option} value={option}>{option}</MenuItem>
-                ))}
-              </Select>
-            </FormControl>
 
-            {form.statusActuel === 'Autre' && (
+          <Paper sx={{ width: '100%', mb: 4 }}>
+            <Tabs
+              value={tabValue}
+              onChange={handleTabChange}
+              indicatorColor="primary"
+              textColor="primary"
+              variant="fullWidth"
+            >
+              <Tab label="Informations personnelles" />
+              <Tab label="Projet immobilier" />
+            </Tabs>
+          </Paper>
+          
+          <Box component="form" onSubmit={handleSubmit}>
+            <TabPanel value={tabValue} index={0}>
               <TextField
-                label="Précisez votre statut"
-                name="autre"
-                value={form.autre}
+                label="Prénom"
+                name="prenom"
+                value={form.prenom}
                 onChange={handleChange}
                 variant="outlined"
                 fullWidth
-                placeholder="Précisez votre statut actuel"
-                sx={{ borderRadius: 2 }}
+                required
+                placeholder="Entrez votre prénom"
+                InputProps={{ startAdornment: <PersonIcon sx={{ color: '#059ad7', mr: 1 }} /> }}
               />
-            )}
-            <FormControl fullWidth variant="outlined" sx={{ borderRadius: 2 }}>
-              <InputLabel sx={{ color: '#059ad7' }}>Type de bien recherché</InputLabel>
-              <Select
-                label="Type de bien recherché"
-                name="typeDeBienRecherche"
-                value={form.typeDeBienRecherche}
+              <TextField
+                label="Nom"
+                name="nom"
+                value={form.nom}
                 onChange={handleChange}
-                startAdornment={<HomeWorkIcon sx={{ color: '#059ad7', mr: 1 }} />}
-                displayEmpty
+                variant="outlined"
+                fullWidth
+                required
+                placeholder="Entrez votre nom"
+                InputProps={{ startAdornment: <PersonIcon sx={{ color: '#059ad7', mr: 1 }} /> }}
+              />
+              <TextField
+                label="Téléphone"
+                name="telephone"
+                value={form.telephone}
+                onChange={handleChange}
+                variant="outlined"
+                fullWidth
+                required
+                placeholder="Ex: 06 12 34 56 78"
+                InputProps={{ startAdornment: <PhoneIcon sx={{ color: '#059ad7', mr: 1 }} /> }}
+              />
+              <TextField
+                label="Email"
+                type="email"
+                name="email"
+                value={form.email}
+                onChange={handleChange}
+                variant="outlined"
+                fullWidth
+                required
+                placeholder="Ex: exemple@email.com"
+                InputProps={{ startAdornment: <EmailIcon sx={{ color: '#059ad7', mr: 1 }} /> }}
+              />
+              <TextField
+                label="Profession"
+                name="profession"
+                value={form.profession}
+                onChange={handleChange}
+                variant="outlined"
+                fullWidth
+                required
+                placeholder="Ex: Ingénieur, Médecin, etc."
+                InputProps={{ startAdornment: <WorkIcon sx={{ color: '#059ad7', mr: 1 }} /> }}
+              />
+              <TextField
+                label="Ville de résidence"
+                name="villeResidence"
+                value={form.villeResidence}
+                onChange={handleChange}
+                variant="outlined"
+                fullWidth
+                required
+                placeholder="Ex: Tunis, Sousse, etc."
+                InputProps={{ startAdornment: <LocationOnIcon sx={{ color: '#059ad7', mr: 1 }} /> }}
+              />
+              <Button
+                variant="contained"
+                onClick={() => setTabValue(1)}
+                sx={{
+                  mt: 2,
+                  bgcolor: '#059ad7',
+                  '&:hover': { bgcolor: '#047bb0' }
+                }}
               >
-                <MenuItem value="" disabled>
-                  <em>Sélectionnez le type de bien recherché</em>
-                </MenuItem>
-                {typeBienOptions.map((option) => (
-                  <MenuItem key={option} value={option}>{option}</MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            <TextField
-              label="Budget (optionnel)"
-              name="budget"
-              value={form.budget}
-              onChange={handleChange}
-              variant="outlined"
-              fullWidth
-              placeholder="Ex: 250 000 TND"
-              InputProps={{ startAdornment: <MonetizationOnIcon sx={{ color: '#059ad7', mr: 1 }} /> }}
-              sx={{ borderRadius: 2 }}
-            />
-            <Button type="submit" variant="contained" size="large" sx={{ boxShadow: "none", bgcolor: '#059ad7', mt: 2, borderRadius: 2, fontWeight: 600, fontSize: 18, py: 1.5, '&:hover': { bgcolor: '#047bb0' } }} disabled={loading}>
-              {loading ? 'Envoi...' : 'Envoyer'}
-            </Button>
+                Suivant
+              </Button>
+            </TabPanel>
+
+            <TabPanel value={tabValue} index={1}>
+              <FormControl fullWidth required>
+                <InputLabel>Type de bien recherché</InputLabel>
+                <Select
+                  name="typeBienRecherche"
+                  value={form.typeBienRecherche}
+                  onChange={handleChange}
+                  label="Type de bien recherché"
+                  startAdornment={<HomeWorkIcon sx={{ color: '#059ad7', mr: 1 }} />}
+                >
+                  <MenuItem value="" disabled>
+                    <em>Sélectionnez le type de bien</em>
+                  </MenuItem>
+                  {typeBienOptions.map((option) => (
+                    <MenuItem key={option} value={option}>{option}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+
+              {form.typeBienRecherche === 'Autre' && (
+                <TextField
+                  label="Précisez le type de bien"
+                  name="typeBienRechercheAutre"
+                  value={form.typeBienRechercheAutre}
+                  onChange={handleChange}
+                  variant="outlined"
+                  fullWidth
+                  required
+                  placeholder="Précisez le type de bien recherché"
+                />
+              )}
+
+              <FormControl fullWidth required>
+                <InputLabel>Type de service recherché</InputLabel>
+                <Select
+                  name="typeServiceRecherche"
+                  value={form.typeServiceRecherche}
+                  onChange={handleChange}
+                  label="Type de service recherché"
+                >
+                  <MenuItem value="" disabled>
+                    <em>Sélectionnez le type de service</em>
+                  </MenuItem>
+                  {typeServiceOptions.map((option) => (
+                    <MenuItem key={option} value={option}>{option}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+
+              {form.typeServiceRecherche === 'Autre' && (
+                <TextField
+                  label="Précisez le type de service"
+                  name="typeServiceRechercheAutre"
+                  value={form.typeServiceRechercheAutre}
+                  onChange={handleChange}
+                  variant="outlined"
+                  fullWidth
+                  required
+                  placeholder="Précisez le type de service recherché"
+                />
+              )}
+
+              <FormControl component="fieldset" required>
+                <FormLabel component="legend">Statut du projet</FormLabel>
+                <RadioGroup
+                  name="statutProjet"
+                  value={form.statutProjet}
+                  onChange={handleChange}
+                >
+                  <FormControlLabel value="En réflexion" control={<Radio />} label="En réflexion" />
+                  <FormControlLabel value="Recherche active" control={<Radio />} label="Recherche active" />
+                </RadioGroup>
+              </FormControl>
+
+              {form.statutProjet === 'Recherche active' && (
+                <FormControl component="fieldset" required>
+                  <FormLabel component="legend">Achat prévu dans</FormLabel>
+                  <RadioGroup
+                    name="delaiAchat"
+                    value={form.delaiAchat}
+                    onChange={handleChange}
+                  >
+                    <FormControlLabel value="< 3 mois" control={<Radio />} label="< 3 mois" />
+                    <FormControlLabel value="3-6 mois" control={<Radio />} label="3-6 mois" />
+                    <FormControlLabel value="> 6 mois" control={<Radio />} label="> 6 mois" />
+                  </RadioGroup>
+                </FormControl>
+              )}
+
+              <TextField
+                label="Localisation souhaitée"
+                name="localisationSouhaitee"
+                value={form.localisationSouhaitee}
+                onChange={handleChange}
+                variant="outlined"
+                fullWidth
+                required
+                placeholder="Ex: Tunis Nord, La Marsa, etc."
+              />
+
+              <FormControl fullWidth required>
+                <InputLabel>Budget estimé</InputLabel>
+                <Select
+                  name="budget"
+                  value={form.budget}
+                  onChange={handleChange}
+                  label="Budget estimé"
+                  startAdornment={<MonetizationOnIcon sx={{ color: '#059ad7', mr: 1 }} />}
+                >
+                  <MenuItem value="" disabled>
+                    <em>Sélectionnez votre budget</em>
+                  </MenuItem>
+                  {budgetOptions.map((option) => (
+                    <MenuItem key={option} value={option}>{option}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+
+              {form.budget === 'À définir' && (
+                <TextField
+                  label="Budget défini"
+                  name="budgetDefini"
+                  value={form.budgetDefini}
+                  onChange={handleChange}
+                  variant="outlined"
+                  fullWidth
+                  required
+                  placeholder="Ex: 300 000 TND"
+                />
+              )}
+
+              <FormControl fullWidth required>
+                <InputLabel>Financement</InputLabel>
+                <Select
+                  name="financement"
+                  value={form.financement}
+                  onChange={handleChange}
+                  label="Financement"
+                >
+                  <MenuItem value="" disabled>
+                    <em>Sélectionnez le mode de financement</em>
+                  </MenuItem>
+                  {financementOptions.map((option) => (
+                    <MenuItem key={option} value={option}>{option}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+
+              <FormControl fullWidth required>
+                <InputLabel>Comment avez-vous connu LEADERS IMMOBILIER ?</InputLabel>
+                <Select
+                  name="sourceConnaissance"
+                  value={form.sourceConnaissance}
+                  onChange={handleChange}
+                  label="Comment avez-vous connu LEADERS IMMOBILIER ?"
+                >
+                  <MenuItem value="" disabled>
+                    <em>Sélectionnez la source</em>
+                  </MenuItem>
+                  {sourceConnaissanceOptions.map((option) => (
+                    <MenuItem key={option} value={option}>{option}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+
+              {form.sourceConnaissance === 'Autre' && (
+                <TextField
+                  label="Précisez la source"
+                  name="sourceConnaissanceAutre"
+                  value={form.sourceConnaissanceAutre}
+                  onChange={handleChange}
+                  variant="outlined"
+                  fullWidth
+                  required
+                  placeholder="Précisez comment vous nous avez connu"
+                />
+              )}
+
+              <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
+                <Button
+                  variant="outlined"
+                  onClick={() => setTabValue(0)}
+                  sx={{ flex: 1 }}
+                >
+                  Précédent
+                </Button>
+                <Button 
+                  type="submit" 
+                  variant="contained" 
+                  size="large" 
+                  sx={{ 
+                    flex: 1,
+                    boxShadow: "none", 
+                    bgcolor: '#059ad7', 
+                    borderRadius: 2, 
+                    fontWeight: 600, 
+                    fontSize: 18, 
+                    py: 1.5, 
+                    '&:hover': { bgcolor: '#047bb0' } 
+                  }} 
+                  disabled={loading}
+                >
+                  {loading ? 'Envoi...' : 'Envoyer'}
+                </Button>
+              </Box>
+            </TabPanel>
           </Box>
         </Box>
       </Grid>

@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material';
 import Form from './Pages/Form';
 import Liste from './Pages/Liste';
+import Game from './Pages/Game';
 
 function App() {
   const theme = createTheme({
@@ -25,6 +26,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Form />} />
           <Route path="/liste" element={<Liste />} />
+          <Route path="/game" element={<Game />} />
         </Routes>
       </Router>
     </ThemeProvider>
