@@ -25,6 +25,12 @@ import PhoneIcon from '@mui/icons-material/Phone';
 import WorkIcon from '@mui/icons-material/Work';
 import HomeWorkIcon from '@mui/icons-material/HomeWork';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
+import BusinessIcon from '@mui/icons-material/Business';
+import BuildIcon from '@mui/icons-material/Build';
+import TimelineIcon from '@mui/icons-material/Timeline';
+import MapIcon from '@mui/icons-material/Map';
+import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
+import CampaignIcon from '@mui/icons-material/Campaign';
 import { toast, Toaster } from 'sonner';
 
 const typeBienOptions = [
@@ -316,6 +322,7 @@ function Form() {
                   fullWidth
                   required
                   placeholder="Précisez le type de bien recherché"
+                  InputProps={{ startAdornment: <HomeWorkIcon sx={{ color: '#059ad7', mr: 1 }} /> }}
                 />
               )}
 
@@ -326,6 +333,7 @@ function Form() {
                   value={form.typeServiceRecherche}
                   onChange={handleChange}
                   label="Type de service recherché"
+                  startAdornment={<BuildIcon sx={{ color: '#059ad7', mr: 1 }} />}
                 >
                   <MenuItem value="" disabled>
                     <em>Sélectionnez le type de service</em>
@@ -346,6 +354,7 @@ function Form() {
                   fullWidth
                   required
                   placeholder="Précisez le type de service recherché"
+                  InputProps={{ startAdornment: <BuildIcon sx={{ color: '#059ad7', mr: 1 }} /> }}
                 />
               )}
 
@@ -385,6 +394,7 @@ function Form() {
                 fullWidth
                 required
                 placeholder="Ex: Tunis Nord, La Marsa, etc."
+                InputProps={{ startAdornment: <MapIcon sx={{ color: '#059ad7', mr: 1 }} /> }}
               />
 
               <FormControl fullWidth required>
@@ -415,6 +425,7 @@ function Form() {
                   fullWidth
                   required
                   placeholder="Ex: 300 000 TND"
+                  InputProps={{ startAdornment: <MonetizationOnIcon sx={{ color: '#059ad7', mr: 1 }} /> }}
                 />
               )}
 
@@ -425,6 +436,7 @@ function Form() {
                   value={form.financement}
                   onChange={handleChange}
                   label="Financement"
+                  startAdornment={<AccountBalanceIcon sx={{ color: '#059ad7', mr: 1 }} />}
                 >
                   <MenuItem value="" disabled>
                     <em>Sélectionnez le mode de financement</em>
@@ -442,6 +454,7 @@ function Form() {
                   value={form.sourceConnaissance}
                   onChange={handleChange}
                   label="Comment avez-vous connu LEADERS IMMOBILIER ?"
+                  startAdornment={<CampaignIcon sx={{ color: '#059ad7', mr: 1 }} />}
                 >
                   <MenuItem value="" disabled>
                     <em>Sélectionnez la source</em>
@@ -462,6 +475,7 @@ function Form() {
                   fullWidth
                   required
                   placeholder="Précisez comment vous nous avez connu"
+                  InputProps={{ startAdornment: <CampaignIcon sx={{ color: '#059ad7', mr: 1 }} /> }}
                 />
               )}
 
