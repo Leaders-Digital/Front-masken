@@ -9,6 +9,10 @@ import {
   Fade,
   Zoom,
   useTheme,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from '@mui/material';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -24,7 +28,7 @@ function Game() {
   const [showConfetti, setShowConfetti] = useState(false);
   const [mustSpin, setMustSpin] = useState(false);
   const [prizeNumber, setPrizeNumber] = useState(0);
-  const [colorIndex, setColorIndex] = useState(0);
+  const [today, setToday] = useState('');
   const navigate = useNavigate();
   const theme = useTheme();
 
@@ -42,8 +46,10 @@ function Game() {
 
   const fetchParticipants = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/api/participants?limit=1000');
+      setIsLoading(true);
+      const response = await axios.get('http://localhost:3000/api/participants/game/today');
       setParticipants(response.data.participants);
+      setToday(response.data.date);
       setIsLoading(false);
     } catch (error) {
       console.error('Error fetching participants:', error);
@@ -53,7 +59,7 @@ function Game() {
 
   const handleSpinClick = () => {
     if (!participants || participants.length === 0) {
-      alert('Aucun participant disponible');
+      alert('Aucun participant disponible pour aujourd\'hui');
       return;
     }
     
@@ -157,6 +163,21 @@ function Game() {
             Tirage au Sort
           </Typography>
         </Fade>
+
+        {/* <Typography 
+          variant="h6" 
+          sx={{ 
+            mb: 4,
+            color: 'text.secondary',
+            textAlign: 'center'
+          }}
+        >
+          {new Date(today).toLocaleDateString('fr-FR', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+          })}
+        </Typography> */}
         
         <Paper 
           elevation={3} 
@@ -175,6 +196,9 @@ function Game() {
         >
           {!winner && wheelData.length > 0 && (
             <Box sx={{ textAlign: 'center', width: '100%' }}>
+              <Typography variant="h6" sx={{ mb: 2, color: 'text.secondary' }}>
+                Nombre de participants aujourd'hui: {participants.length}
+              </Typography>
               <Box sx={{ 
                 display: 'flex', 
                 justifyContent: 'center',
