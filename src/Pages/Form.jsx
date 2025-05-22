@@ -166,13 +166,14 @@ function Form() {
   };
 
   return (
-    <Grid container sx={{ minHeight: '100vh', width: '100vw' }}>
+    <Grid container sx={{ minHeight: '100vh', width: '100vw' }} > 
       <Toaster richColors />
-      <Grid item xs={12} md={6} sx={{
+      <Grid item xs={12} md={6}  sx={{
         width: { xs: '100%', md: '50vw' },
         height: '100vh',
         position: 'relative',
-        overflow: 'hidden'
+        overflow: 'hidden',
+        display: { xs: 'none', md: 'block' }
       }}>
         <img 
           src="/images/house.jpg" 
@@ -310,6 +311,7 @@ function Form() {
                   onChange={handleChange}
                   label="Type de bien recherché"
                   startAdornment={<HomeWorkIcon sx={{ color: '#059ad7', mr: 1 }} />}
+                  placeholder="Choisissez le type de bien qui vous intéresse"
                 >
                   <MenuItem value="" disabled>
                     <em>Sélectionnez le type de bien</em>
@@ -329,7 +331,7 @@ function Form() {
                   variant="outlined"
                   fullWidth
                   required
-                  placeholder="Précisez le type de bien recherché"
+                  placeholder="Décrivez le type de bien que vous recherchez"
                   InputProps={{ startAdornment: <HomeWorkIcon sx={{ color: '#059ad7', mr: 1 }} /> }}
                 />
               )}
@@ -342,6 +344,7 @@ function Form() {
                   onChange={handleChange}
                   label="Type de service recherché"
                   startAdornment={<BuildIcon sx={{ color: '#059ad7', mr: 1 }} />}
+                  placeholder="Sélectionnez le service qui correspond à votre projet"
                 >
                   <MenuItem value="" disabled>
                     <em>Sélectionnez le type de service</em>
@@ -361,7 +364,7 @@ function Form() {
                   variant="outlined"
                   fullWidth
                   required
-                  placeholder="Précisez le type de service recherché"
+                  placeholder="Décrivez le service spécifique dont vous avez besoin"
                   InputProps={{ startAdornment: <BuildIcon sx={{ color: '#059ad7', mr: 1 }} /> }}
                 />
               )}
@@ -372,6 +375,8 @@ function Form() {
                   name="statutProjet"
                   value={form.statutProjet}
                   onChange={handleChange}
+                  aria-label="Statut du projet"
+                  placeholder="Indiquez où vous en êtes dans votre projet"
                 >
                   <FormControlLabel value="En réflexion" control={<Radio />} label="En réflexion" />
                   <FormControlLabel value="Recherche active" control={<Radio />} label="Recherche active" />
@@ -385,6 +390,8 @@ function Form() {
                     name="delaiAchat"
                     value={form.delaiAchat}
                     onChange={handleChange}
+                    aria-label="Délai d'achat"
+                    placeholder="Précisez votre échéance d'achat"
                   >
                     <FormControlLabel value="< 3 mois" control={<Radio />} label="< 3 mois" />
                     <FormControlLabel value="3-6 mois" control={<Radio />} label="3-6 mois" />
@@ -401,7 +408,7 @@ function Form() {
                 variant="outlined"
                 fullWidth
                 required
-                placeholder="Ex: Tunis Nord, La Marsa, etc."
+                placeholder="Indiquez la zone géographique qui vous intéresse"
                 InputProps={{ startAdornment: <MapIcon sx={{ color: '#059ad7', mr: 1 }} /> }}
               />
 
@@ -413,6 +420,7 @@ function Form() {
                   onChange={handleChange}
                   label="Budget estimé"
                   startAdornment={<MonetizationOnIcon sx={{ color: '#059ad7', mr: 1 }} />}
+                  placeholder="Sélectionnez votre fourchette de budget"
                 >
                   <MenuItem value="" disabled>
                     <em>Sélectionnez votre budget</em>
@@ -432,7 +440,7 @@ function Form() {
                   variant="outlined"
                   fullWidth
                   required
-                  placeholder="Ex: 300 000 TND"
+                  placeholder="Indiquez votre budget approximatif en TND"
                   InputProps={{ startAdornment: <MonetizationOnIcon sx={{ color: '#059ad7', mr: 1 }} /> }}
                 />
               )}
@@ -446,6 +454,7 @@ function Form() {
                   label="Financement"
                   multiple
                   startAdornment={<AccountBalanceIcon sx={{ color: '#059ad7', mr: 1 }} />}
+                  placeholder="Choisissez vos modes de financement"
                 >
                   {financementOptions.map((option) => (
                     <MenuItem key={option} value={option}>{option}</MenuItem>
@@ -461,6 +470,7 @@ function Form() {
                   onChange={handleChange}
                   label="Comment avez-vous connu LEADERS IMMOBILIER ?"
                   startAdornment={<CampaignIcon sx={{ color: '#059ad7', mr: 1 }} />}
+                  placeholder="Indiquez comment vous nous avez découvert"
                 >
                   <MenuItem value="" disabled>
                     <em>Sélectionnez la source</em>
@@ -480,7 +490,7 @@ function Form() {
                   variant="outlined"
                   fullWidth
                   required
-                  placeholder="Précisez comment vous nous avez connu"
+                  placeholder="Décrivez comment vous nous avez connu"
                   InputProps={{ startAdornment: <CampaignIcon sx={{ color: '#059ad7', mr: 1 }} /> }}
                 />
               )}
