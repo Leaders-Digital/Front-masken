@@ -74,7 +74,7 @@ function Liste() {
 
   const handleShow = async (page = 1) => {
     try {
-      const response = await axios.get(`http://localhost:3000/api/participants?page=${page}&limit=${data.itemsPerPage}`);
+      const response = await axios.get(`https://backend-masken.onrender.com/api/participants?page=${page}&limit=${data.itemsPerPage}`);
       setData(response.data);
     } catch (error) {
       console.log(error);
@@ -83,7 +83,7 @@ function Liste() {
 
   const handleDeleteAll = async () => {
     try {
-      await axios.delete('http://localhost:3000/api/participants/all');
+      await axios.delete('https://backend-masken.onrender.com/api/participants/all');
       setOpenDialog(false);
       handleShow(); // Refresh the list
     } catch (error) {

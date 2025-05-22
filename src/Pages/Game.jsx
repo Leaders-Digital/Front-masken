@@ -47,7 +47,7 @@ function Game() {
   const fetchParticipants = async () => {
     try {
       setIsLoading(true);
-      const response = await axios.get('http://localhost:3000/api/participants/game/today');
+      const response = await axios.get('https://backend-masken.onrender.com/api/participants/game/today');
       setParticipants(response.data.participants);
       setToday(response.data.date);
       setIsLoading(false);
