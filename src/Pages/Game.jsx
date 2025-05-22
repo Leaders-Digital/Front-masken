@@ -233,8 +233,7 @@ function Game() {
                   radiusLineWidth={2}
                   fontSize={16}
                   perpendicularText={false}
-                  textDistance={80} 
-                  
+                  textDistance={60} 
                 />
               </Box>
               
