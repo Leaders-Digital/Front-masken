@@ -106,7 +106,7 @@ function Form() {
     localisationSouhaitee: '',
     budget: '',
     budgetDefini: '',
-    financement: '',
+    financement: [],
     sourceConnaissance: '',
     sourceConnaissanceAutre: ''
   });
@@ -149,7 +149,7 @@ function Form() {
         localisationSouhaitee: '',
         budget: '',
         budgetDefini: '',
-        financement: '',
+        financement: [],
         sourceConnaissance: '',
         sourceConnaissanceAutre: ''
       });
@@ -444,11 +444,9 @@ function Form() {
                   value={form.financement}
                   onChange={handleChange}
                   label="Financement"
+                  multiple
                   startAdornment={<AccountBalanceIcon sx={{ color: '#059ad7', mr: 1 }} />}
                 >
-                  <MenuItem value="" disabled>
-                    <em>Sélectionnez le mode de financement</em>
-                  </MenuItem>
                   {financementOptions.map((option) => (
                     <MenuItem key={option} value={option}>{option}</MenuItem>
                   ))}
