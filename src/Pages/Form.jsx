@@ -206,7 +206,7 @@ function Form() {
               indicatorColor="primary"
               textColor="primary"
               variant="fullWidth"
-              sx={{ border: '1px solid #059ad7',}}
+            
             >
               <Tab label="Informations personnelles" />
               <Tab label="Projet immobilier" />
