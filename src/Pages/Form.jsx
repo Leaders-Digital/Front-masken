@@ -192,8 +192,9 @@ function Form() {
         justifyContent: 'center',
         bgcolor: 'white',
         overflowY: 'auto',
+    
       }}>
-        <Box sx={{ width: '100%', p: { xs: 2, md: 6 }, maxWidth: 520, mx: 'auto', borderRadius: 4 }}>
+        <Box sx={{ width: '100%', p: { xs: 2, md: 6 }, maxWidth: 520, mx: 'auto', borderRadius: 4 ,    border: '1px solid #059ad7',}}>
           <Typography variant="h5" sx={{ color: '#059ad7', mb: 4, textAlign: 'center', fontWeight: 600, letterSpacing: 1 }}>
             Formulaire d'inscription
           </Typography>
@@ -205,6 +206,7 @@ function Form() {
               indicatorColor="primary"
               textColor="primary"
               variant="fullWidth"
+              sx={{ border: '1px solid #059ad7',}}
             >
               <Tab label="Informations personnelles" />
               <Tab label="Projet immobilier" />
@@ -285,6 +287,7 @@ function Form() {
                 onClick={() => setTabValue(1)}
                 sx={{
                   mt: 2,
+                  boxShadow: 'none',
                   bgcolor: '#059ad7',
                   '&:hover': { bgcolor: '#047bb0' }
                 }}

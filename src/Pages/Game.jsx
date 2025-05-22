@@ -24,6 +24,7 @@ function Game() {
   const [showConfetti, setShowConfetti] = useState(false);
   const [mustSpin, setMustSpin] = useState(false);
   const [prizeNumber, setPrizeNumber] = useState(0);
+  const [colorIndex, setColorIndex] = useState(0);
   const navigate = useNavigate();
   const theme = useTheme();
 
@@ -69,17 +70,25 @@ function Game() {
     }
   };
 
-  const getRandomColor = () => {
+  const getRandomColor = (index) => {
     const colors = [
-      '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEEAD',
-      '#D4A5A5', '#9B59B6', '#3498DB', '#E67E22', '#2ECC71'
+      '#FFB3BA',
+      '#FFDFBA',
+      '#FFFFBA', 
+      '#BAFFC9',
+      '#BAE1FF',
+      '#D5BAFF',
+      '#FFCCE5',
+      '#C0F0E8',
+      '#F2C1F0',
+      '#C2F0C2'
     ];
-    return colors[Math.floor(Math.random() * colors.length)];
+    return colors[index % colors.length];
   };
 
-  const wheelData = participants.map(participant => ({
+  const wheelData = participants.map((participant, index) => ({
     option: `${participant.prenom} ${participant.nom}`,
-    style: { backgroundColor: getRandomColor(), textColor: 'white' }
+    style: { backgroundColor: getRandomColor(index), textColor: '#2C3E50' }
   }));
 
   if (isLoading) {
@@ -125,7 +134,7 @@ function Game() {
           sx={{
             alignSelf: 'flex-start',
             mb: 4,
-            color: '#667eea',
+            color: 'primary.main',
             '&:hover': {
               backgroundColor: 'rgba(102, 126, 234, 0.1)',
             },
@@ -139,7 +148,7 @@ function Game() {
             variant="h3" 
             gutterBottom 
             sx={{ 
-              color: '#667eea',
+              color: 'primary.main',
               fontWeight: 'bold',
               mb: 4,
               textAlign: 'center',
@@ -160,6 +169,8 @@ function Game() {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
+            boxShadow: 'none',
+            border: '1px solid rgba(102, 126, 234, 0.1)',
           }}
         >
           {!winner && wheelData.length > 0 && (
@@ -192,13 +203,14 @@ function Game() {
                   outerBorderColor="#667eea"
                   outerBorderWidth={3}
                   innerBorderColor="#667eea"
-                  innerBorderWidth={3}
+                  innerBorderWidth={2}
                   innerRadius={0}
                   radiusLineColor="#667eea"
                   radiusLineWidth={2}
                   fontSize={16}
                   perpendicularText={false}
-                  textDistance={85}
+                  textDistance={80} 
+                  
                 />
               </Box>
               
@@ -213,15 +225,7 @@ function Game() {
                   py: 2,
                   px: 6,
                   borderRadius: 3,
-                  background: '#667eea',
-                  boxShadow: '0 3px 5px 2px rgba(102, 126, 234, .3)',
-                  color: 'white',
-                  '&:hover': {
-                    background: '#5a6fd6',
-                  },
-                  '&:disabled': {
-                    background: '#a5b1f0',
-                  }
+           
                 }}
               >
                 {mustSpin ? 'En cours...' : 'Lancer la Roue'}
@@ -240,7 +244,7 @@ function Game() {
                   variant="h4" 
                   gutterBottom
                   sx={{ 
-                    color: '#667eea',
+                    color: 'primary.main',
                     fontWeight: 'bold',
                     mb: 3,
                   }}
@@ -263,7 +267,7 @@ function Game() {
                     sx={{ 
                       my: 2,
                       fontWeight: 'bold',
-                      color: '#667eea',
+                      color: 'primary.main',
                     }}
                   >
                     {winner.prenom} {winner.nom}
@@ -287,12 +291,7 @@ function Game() {
                     px: 4,
                     py: 1.5,
                     borderRadius: 2,
-                    background: '#667eea',
-                    boxShadow: '0 3px 5px 2px rgba(102, 126, 234, .3)',
-                    color: 'white',
-                    '&:hover': {
-                      background: '#5a6fd6',
-                    },
+                    boxShadow: 'none',
                   }}
                 >
                   Nouveau Tirage
