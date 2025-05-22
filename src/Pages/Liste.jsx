@@ -56,6 +56,7 @@ function Liste() {
     itemsPerPage: 12
   });
   const [openDialog, setOpenDialog] = useState(false);
+  const [showWinnersOnly, setShowWinnersOnly] = useState(false);
 
   const getStatusStyle = (statut) => ({
     backgroundColor:
@@ -74,7 +75,9 @@ function Liste() {
 
   const handleShow = async (page = 1) => {
     try {
-      const response = await axios.get(`https://backend-masken.onrender.com/api/participants?page=${page}&limit=${data.itemsPerPage}`);
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/api/participants?page=${page}&limit=${data.itemsPerPage}&winners=${showWinnersOnly}`
+      );
       setData(response.data);
     } catch (error) {
       console.log(error);
@@ -83,7 +86,7 @@ function Liste() {
 
   const handleDeleteAll = async () => {
     try {
-      await axios.delete('https://backend-masken.onrender.com/api/participants/all');
+      await axios.delete(`${import.meta.env.VITE_API_URL}/api/participants/all`);
       setOpenDialog(false);
       handleShow(); // Refresh the list
     } catch (error) {
@@ -93,7 +96,7 @@ function Liste() {
 
   useEffect(() => {
     handleShow();
-  }, []);
+  }, [showWinnersOnly]);
 
   const handlePageChange = (event, newPage) => {
     handleShow(newPage);
@@ -143,9 +146,15 @@ function Liste() {
         <Box sx={{ display: 'flex', gap: 2 }}>
           <Button
             variant="contained"
-           
-
-            sx={{ boxShadow: 'none',backgroundColor: '#16A34A'}}
+            color={showWinnersOnly ? "success" : "primary"}
+            onClick={() => setShowWinnersOnly(!showWinnersOnly)}
+            sx={{ boxShadow: 'none' }}
+          >
+            {showWinnersOnly ? "Tous les participants" : "Voir les gagnants"}
+          </Button>
+          <Button
+            variant="contained"
+            sx={{ boxShadow: 'none', backgroundColor: '#16A34A' }}
             startIcon={<FileDownloadIcon />}
             onClick={handleExportToExcel}
           >
@@ -154,7 +163,7 @@ function Liste() {
           <Button
             variant="contained"
             color="primary"
-            sx={{ boxShadow: 'none',}}
+            sx={{ boxShadow: 'none' }}
             startIcon={<CasinoIcon />}
             onClick={() => navigate('/game')}
           >
@@ -163,7 +172,7 @@ function Liste() {
           <Button
             variant="contained"
             color="error"
-            sx={{ boxShadow: 'none',}}
+            sx={{ boxShadow: 'none' }}
             startIcon={<DeleteIcon />}
             onClick={() => setOpenDialog(true)}
           >
@@ -205,6 +214,7 @@ function Liste() {
               <TableCell sx={{ color: 'white' }}>Statut</TableCell>
               <TableCell sx={{ color: 'white' }}>Budget</TableCell>
               <TableCell sx={{ color: 'white' }}>Date d'inscription</TableCell>
+              <TableCell sx={{ color: 'white' }}>Statut</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -242,6 +252,18 @@ function Liste() {
                     : participant.budget}
                 </TableCell>
                 <TableCell>{formatDate(participant.createdAt)}</TableCell>
+                <TableCell>
+                  {participant.isWinner && (
+                    <Chip
+                      label="Gagnant"
+                      sx={{
+                        backgroundColor: '#16A34A33',
+                        color: '#16A34A',
+                      }}
+                      size="small"
+                    />
+                  )}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

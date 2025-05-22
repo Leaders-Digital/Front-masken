@@ -47,7 +47,7 @@ function Game() {
   const fetchParticipants = async () => {
     try {
       setIsLoading(true);
-      const response = await axios.get('https://backend-masken.onrender.com/api/participants/game/today');
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/participants/game/today`);
       setParticipants(response.data.participants);
       setToday(response.data.date);
       setIsLoading(false);
@@ -68,11 +68,24 @@ function Game() {
     setMustSpin(true);
   };
 
-  const handleStopSpinning = () => {
+  const handleStopSpinning = async () => {
     setMustSpin(false);
     if (participants && participants[prizeNumber]) {
       const selectedWinner = participants[prizeNumber];
-      setWinner(selectedWinner);
+      try {
+        // Mark the participant as winner in the database
+        await axios.patch(`${import.meta.env.VITE_API_URL}/api/participants/${selectedWinner._id}`, {
+          isWinner: true,
+          winDate: new Date()
+        });
+        setWinner(selectedWinner);
+        // Refresh the participants list
+        await fetchParticipants();
+      } catch (error) {
+        console.error('Error marking winner:', error);
+        // Still show the winner even if the database update fails
+        setWinner(selectedWinner);
+      }
     }
   };
 
