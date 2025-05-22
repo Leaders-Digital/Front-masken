@@ -23,8 +23,10 @@ import {
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CasinoIcon from '@mui/icons-material/Casino';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import * as XLSX from 'xlsx';
 
 // Sample data - replace this with your actual data fetching logic
 const sampleData = [
@@ -105,6 +107,33 @@ function Liste() {
     });
   };
 
+  const handleExportToExcel = () => {
+    // Prepare the data for export
+    const exportData = data.participants.map(participant => ({
+      'Nom': participant.nom,
+      'Prénom': participant.prenom,
+      'Email': participant.email,
+      'Téléphone': participant.telephone,
+      'Profession': participant.profession,
+      'Ville': participant.villeResidence,
+      'Type de Bien': participant.typeBienRecherche === 'Autre' ? participant.typeBienRechercheAutre : participant.typeBienRecherche,
+      'Service': participant.typeServiceRecherche === 'Autre' ? participant.typeServiceRechercheAutre : participant.typeServiceRecherche,
+      'Statut': participant.statutProjet,
+      'Budget': participant.budget === 'À définir' ? participant.budgetDefini : participant.budget,
+      'Date d\'inscription': formatDate(participant.createdAt)
+    }));
+
+    // Create a worksheet
+    const ws = XLSX.utils.json_to_sheet(exportData);
+    
+    // Create a workbook
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Participants");
+    
+    // Generate Excel file
+    XLSX.writeFile(wb, "liste_participants.xlsx");
+  };
+
   return (
     <Box sx={{ p: 3 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
@@ -114,7 +143,18 @@ function Liste() {
         <Box sx={{ display: 'flex', gap: 2 }}>
           <Button
             variant="contained"
+           
+
+            sx={{ boxShadow: 'none',backgroundColor: '#16A34A'}}
+            startIcon={<FileDownloadIcon />}
+            onClick={handleExportToExcel}
+          >
+            Exporter Excel
+          </Button>
+          <Button
+            variant="contained"
             color="primary"
+            sx={{ boxShadow: 'none',}}
             startIcon={<CasinoIcon />}
             onClick={() => navigate('/game')}
           >
@@ -123,6 +163,7 @@ function Liste() {
           <Button
             variant="contained"
             color="error"
+            sx={{ boxShadow: 'none',}}
             startIcon={<DeleteIcon />}
             onClick={() => setOpenDialog(true)}
           >
