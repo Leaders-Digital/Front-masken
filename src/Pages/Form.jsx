@@ -132,7 +132,7 @@ function Form() {
         formData.delaiAchat = null;
       }
 
-      const response = await axios.post('https://backend-masken.onrender.com/api/participants', formData);
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/participants`, formData);
       setForm({
         nom: '',
         prenom: '',
