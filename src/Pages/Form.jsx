@@ -170,18 +170,23 @@ function Form() {
       <Toaster richColors />
       <Grid item xs={12} md={6} sx={{
         width: { xs: '100%', md: '50vw' },
-        minHeight: '100vh',
-        backgroundImage: 'url(/images/house.jpg)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        color: 'white',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
+        height: '100vh',
         position: 'relative',
-        p: 4,
+        overflow: 'hidden'
       }}>
+        <img 
+          src="/images/house.jpg" 
+          alt="House" 
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            position: 'absolute',
+            objectFit: 'contain',
+            top: 0,
+            left: 0
+          }} 
+        />
       </Grid>
 
       <Grid item xs={12} md={6} sx={{
