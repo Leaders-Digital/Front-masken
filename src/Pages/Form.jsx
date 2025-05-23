@@ -153,6 +153,7 @@ function Form() {
         sourceConnaissance: '',
         sourceConnaissanceAutre: ''
       });
+      setTabValue(0);
       toast.success('Inscription réussie !');
     } catch (err) {
       if (err.response?.data?.message?.includes('E11000 duplicate key error')) {
