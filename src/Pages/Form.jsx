@@ -99,7 +99,7 @@ function Form() {
     villeResidence: '',
     typeBienRecherche: '',
     typeBienRechercheAutre: '',
-    typeServiceRecherche: '',
+    typeServiceRecherche: [],
     typeServiceRechercheAutre: '',
     statutProjet: '',
     delaiAchat: null,
@@ -107,6 +107,8 @@ function Form() {
     budget: '',
     budgetDefini: '',
     financement: [],
+    dureePaiement: '',
+    montantAvance: '',
     sourceConnaissance: '',
     sourceConnaissanceAutre: ''
   });
@@ -142,7 +144,7 @@ function Form() {
         villeResidence: '',
         typeBienRecherche: '',
         typeBienRechercheAutre: '',
-        typeServiceRecherche: '',
+        typeServiceRecherche: [],
         typeServiceRechercheAutre: '',
         statutProjet: '',
         delaiAchat: null,
@@ -150,6 +152,8 @@ function Form() {
         budget: '',
         budgetDefini: '',
         financement: [],
+        dureePaiement: '',
+        montantAvance: '',
         sourceConnaissance: '',
         sourceConnaissanceAutre: ''
       });
@@ -344,28 +348,26 @@ function Form() {
                   value={form.typeServiceRecherche}
                   onChange={handleChange}
                   label="Type de service recherché"
+                  multiple
                   startAdornment={<BuildIcon sx={{ color: '#059ad7', mr: 1 }} />}
-                  placeholder="Sélectionnez le service qui correspond à votre projet"
+                  placeholder="Sélectionnez les services qui correspondent à votre projet"
                 >
-                  <MenuItem value="" disabled>
-                    <em>Sélectionnez le type de service</em>
-                  </MenuItem>
                   {typeServiceOptions.map((option) => (
                     <MenuItem key={option} value={option}>{option}</MenuItem>
                   ))}
                 </Select>
               </FormControl>
 
-              {form.typeServiceRecherche === 'Autre' && (
+              {form.typeServiceRecherche.includes('Autre') && (
                 <TextField
-                  label="Précisez le type de service"
+                  label="Précisez les autres services"
                   name="typeServiceRechercheAutre"
                   value={form.typeServiceRechercheAutre}
                   onChange={handleChange}
                   variant="outlined"
                   fullWidth
                   required
-                  placeholder="Décrivez le service spécifique dont vous avez besoin"
+                  placeholder="Décrivez les services spécifiques dont vous avez besoin"
                   InputProps={{ startAdornment: <BuildIcon sx={{ color: '#059ad7', mr: 1 }} /> }}
                 />
               )}
@@ -462,6 +464,37 @@ function Form() {
                   ))}
                 </Select>
               </FormControl>
+
+              {form.financement.includes('Facilité de paiement') && (
+                <Grid container sx={{gap: 0.5}}>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      label="Durée de paiement"
+                      name="dureePaiement"
+                      value={form.dureePaiement}
+                      onChange={handleChange}
+                      variant="outlined"
+                      fullWidth
+                      required
+                      placeholder="Ex: 12 mois, 24 mois, etc."
+                      InputProps={{ startAdornment: <TimelineIcon sx={{ color: '#059ad7', mr: 1 }} /> }}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      label="Montant d'avance"
+                      name="montantAvance"
+                      value={form.montantAvance}
+                      onChange={handleChange}
+                      variant="outlined"
+                      fullWidth
+                      required
+                      placeholder="Ex: 250000"
+                      InputProps={{ startAdornment: <MonetizationOnIcon sx={{ color: '#059ad7', mr: 1 }} /> }}
+                    />
+                  </Grid>
+                </Grid>
+              )}
 
               <FormControl fullWidth required>
                 <InputLabel>Comment avez-vous connu LEADERS IMMOBILIER ?</InputLabel>
