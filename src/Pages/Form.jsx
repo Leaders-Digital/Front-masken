@@ -466,8 +466,8 @@ function Form() {
               </FormControl>
 
               {form.financement.includes('Facilité de paiement') && (
-                <Grid container sx={{gap: 0.5}}>
-                  <Grid item xs={12} sm={6}>
+                <Grid >
+                  <Grid item xs={5} >
                     <TextField
                       label="Durée de paiement"
                       name="dureePaiement"
@@ -480,7 +480,7 @@ function Form() {
                       InputProps={{ startAdornment: <TimelineIcon sx={{ color: '#059ad7', mr: 1 }} /> }}
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
+                  <Grid item xs={5} mt={2}>
                     <TextField
                       label="Montant d'avance"
                       name="montantAvance"
